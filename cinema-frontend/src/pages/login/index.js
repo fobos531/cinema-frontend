@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState }from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -10,23 +10,19 @@ import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { object, string } from 'yup';
+import Copyright from '../components/copyright'
+import loginService from '../../services/login'
+import { useDispatch } from 'react-redux'
+import { loginUser } from '../../store/actions/authActions'
 
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://github.com/fobos531">
-        Jakov Glavina
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
+const Alert = (props) => {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -70,6 +66,12 @@ const initialValues = {
 
 const LoginForm = () => {
   const classes = useStyles();
+  const dispatch = useDispatch()
+
+  const [open, setOpen] = useState(false);
+  const handleClose = (event, reason) => {
+    setOpen(false); 
+  };
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -84,54 +86,53 @@ const LoginForm = () => {
             Sign in
           </Typography>
           <Formik validationSchema={
-                object({
-                  email: string().required('You have to enter an e-mail!'),
-                  password: string().required('You have to enter a password!'),          
-                })
-              }
-              initialValues={initialValues} onSubmit={(values) => {
-                return new Promise(res => { // promise je samo u svrhe demonstracije
-                  setTimeout(() => {
-                    console.log(values); // objekt s email i password poljima koje morem poslati
-                    console.log('---------');
-                    res();
-                  }, 5000);
-                })
-          }}> 
-            {({ values, isSubmitting, isValidating }) => (
-              <Form className={classes.form}>
-                <Field name="email" as={TextField} label="E-mail" variant="outlined"
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="email"
-                  autoComplete="email"
-                  autoFocus />
-                <ErrorMessage name="email" />
-                <Field name="password" as={TextField} label="Password" variant="outlined"
-                  margin="normal"
-                  required
-                  fullWidth
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                />
-                <FormControlLabel
-                  control={<Checkbox value="remember" color="primary" disableRipple={false} />}
-                  label="Remember me"
-                />
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                  className={classes.submit}
-                >
-                  Sign In
+            object({
+              email: string().required('You have to enter an e-mail!'),
+              password: string().required('You have to enter a password!'),
+            })
+          }
+            initialValues={initialValues} onSubmit={ (loginInfo) => {
+              loginService.login(loginInfo).then(response => {
+                if (response.error) {
+                  setOpen(true)
+                } else { // korisnik se uspješno logirao
+                  dispatch(loginUser(loginInfo))
+                }
+              });
+            }}>
+            <Form className={classes.form}>
+              <Field name="email" as={TextField} label="E-mail" variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                autoComplete="email"
+              />
+              <ErrorMessage name="email" />
+              <Field name="password" as={TextField} label="Password" variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                type="password"
+                id="password"
+                autoComplete="current-password"
+              />
+              <ErrorMessage name="password" /><br></br>
+              <FormControlLabel
+                control={<Checkbox value="remember" color="primary" disableRipple={false} />}
+                label="Remember me"
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
+                Sign In
                 </Button>
-                <pre>{JSON.stringify(values, null, 4)}</pre>
-              </Form>
-            )}
+            </Form>
+
           </Formik>
           <Grid container>
             <Grid item xs>
@@ -140,7 +141,7 @@ const LoginForm = () => {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="/register" variant="body2">
                 {"Don't have an account? Sign Up Here!"}
               </Link>
             </Grid>
@@ -148,6 +149,11 @@ const LoginForm = () => {
           <Box mt={5}>
             <Copyright />
           </Box>
+          <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
+            <Alert onClose={handleClose} severity="error">
+              Invalid username or password! Please check your input.
+            </Alert>
+          </Snackbar>
         </div>
       </Grid>
     </Grid>
