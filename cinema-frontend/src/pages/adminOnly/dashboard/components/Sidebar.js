@@ -8,14 +8,15 @@ import DashboardIcon from '@material-ui/icons/Dashboard';
 import TheatersIcon from '@material-ui/icons/Theaters';
 import MovieIcon from '@material-ui/icons/Movie';
 import EventSeatIcon from '@material-ui/icons/EventSeat';
+import TimerIcon from '@material-ui/icons/Timer';
 import EqualizerIcon from '@material-ui/icons/Equalizer';
 import PersonIcon from '@material-ui/icons/Person';
 
 export const mainListItems = (
   <div>
-    <ListItem 
+    <ListItem
       button
-      component={Link} 
+      component={Link}
       to="/admin/dashboard"
     >
       <ListItemIcon>
@@ -25,7 +26,7 @@ export const mainListItems = (
     </ListItem>
     <ListItem
       button
-      component={Link} 
+      component={Link}
       to="/admin/cinemas"
     >
       <ListItemIcon>
@@ -42,6 +43,16 @@ export const mainListItems = (
         <MovieIcon />
       </ListItemIcon>
       <ListItemText primary="Movies" />
+    </ListItem>
+    <ListItem
+      button
+      component={Link}
+      to="/admin/screeningtimes"
+    >
+      <ListItemIcon>
+        <TimerIcon />
+      </ListItemIcon>
+      <ListItemText primary="Screening times" />
     </ListItem>
     <ListItem
       button

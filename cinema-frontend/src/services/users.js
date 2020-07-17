@@ -13,4 +13,15 @@ const register = async (newUser) => {
   // return response.data; not needed for now
 }
 
-export default { register }
+const totalUsers = async () => {
+  const response = await axios.get(`${baseUrl}/totalUsers`);
+  return response.data;
+}
+
+const updateUser = async (updatedUserDetails) => {
+  console.log(updatedUserDetails);
+  const response = await axios.put(baseUrl, updatedUserDetails)
+  return response.data
+}
+
+export default { register, totalUsers, updateUser }

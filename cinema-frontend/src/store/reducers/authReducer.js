@@ -10,7 +10,8 @@ const authReducer = (state = initialState, action) => {
       console.log(action.payload)
       // set token and user 
       localStorage.setItem('userToken', action.payload.token)
-      return {...state, user: action.payload.user}
+      localStorage.setItem('loggedUser', JSON.stringify(action.payload.user))
+      return {...state, loggedUser: action.payload.user}
     
     case 'LOGIN_FAIL':
     case 'LOGOUT':

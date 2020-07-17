@@ -130,7 +130,7 @@ const LoginForm = () => {
                 className={classes.submit}
               >
                 Sign In
-                </Button>
+              </Button>
             </Form>
 
           </Formik>
