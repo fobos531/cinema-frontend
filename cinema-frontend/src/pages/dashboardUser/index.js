@@ -2,10 +2,23 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import UserInfoForm from './components/UserInfoForm'
 import { Typography } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 
-// i need to fetch user info to populate it 
+
+const useStyles = makeStyles((theme) => ({
+  title: {
+    display: 'block'
+  },
+  center: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column'
+  }
+}));
 
 const DashboardUser = () => {
+  const classes = useStyles();
   let userState = useSelector(state => state.authenticationState.loggedUser)
   if (Object.keys(userState).length === 0) { //if empty object
     if(JSON.parse(localStorage.getItem('loggedUser'))) { //ako imamo u local storageu
@@ -14,12 +27,12 @@ const DashboardUser = () => {
   }
 
   return (
-    <>
-      <Typography>
+    <div className={classes.center}>
+      <h1 className={classes.title}>
         User profile information
-      </Typography>
-      <UserInfoForm loggedUser={userState} />
-    </>
+      </h1><br></br>
+      <UserInfoForm loggedUser={userState} className={classes.UserInfoForm} />
+    </div>
   )
 }
 

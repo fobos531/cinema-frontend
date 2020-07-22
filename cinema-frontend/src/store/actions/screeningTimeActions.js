@@ -2,7 +2,7 @@ import screeningTimeService from '../../services/screeningTime'
 
 export const getScreeningTimes = () => {
   return async dispatch => {
-    const response = await screeningTimeService.allCinemas();
+    const response = await screeningTimeService.allScreeningTimes();
     dispatch({ type: 'GET_SCREENING_TIMES', payload: response})
   }
 }
@@ -15,9 +15,9 @@ export const addNewScreeningTime = (newScreeningTime) => {
   }
 }
 
-export const deleteCinema = (id) => {
+export const deleteScreeningTime = (id) => {
   return async dispatch => {
-    await screeningTimeService.deleteCinema(id)
+    await screeningTimeService.deleteScreeningTime(id)
     dispatch(getScreeningTimes())
   }
 }

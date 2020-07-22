@@ -6,14 +6,14 @@ const addScreeningTime = async (newScreeningTime) => {
   await axios.post(baseUrl, newScreeningTime)
 }
 
-const allCinemas = async () => {
+const allScreeningTimes = async () => {
   const response = await axios.get(baseUrl)
   return response.data; // array objekata od kojih svaki predstavlja jedno kino
 }
 
-const deleteCinema = async (id) => {
+const deleteScreeningTime = async (id) => {
   const response = await axios.delete(`${baseUrl}/${id}`)
   return response.data; // array objekata od kojih svaki predstavlja jedno kino
 }
 
-export default { addScreeningTime, allCinemas, deleteCinema }
+export default { addScreeningTime, allScreeningTimes, deleteScreeningTime }

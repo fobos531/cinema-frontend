@@ -7,6 +7,12 @@ export const getCinemas = () => {
   }
 }
 
+export const getAvailableCinemas = () => {
+  return async dispatch => {
+    const response = await cinemaService.getAvailableCinemas
+  }
+}
+
 export const addNewCinema = (cinemaData) => {
   return async dispatch => {
     await cinemaService.addCinema(cinemaData);

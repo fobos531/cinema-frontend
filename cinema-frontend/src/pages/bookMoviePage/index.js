@@ -1,10 +1,17 @@
-import React, { useEffect, useState } from 'react'
+// Prvo se odabire cinema, a onda se nakon toga odabire available screening time.
+// Dok lik odabere screening time, generira se popis mjesta za odabrano kino.
+
+import React, { useEffect, useState, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
-import { Button } from '@material-ui/core';
 import { getMovieById } from '../../store/actions/movieActions'
-import { Link } from 'react-router-dom'
+import SeatsView from './components/SeatsView'
+import Paper from '@material-ui/core/Paper';
+import BookMovieForm from './components/BookMovieForm'
+import Container from '@material-ui/core/Container';
+
+
 
 const useStyles = makeStyles((theme) => ({
   wholePage: {
@@ -13,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     width: '100vw',
     height: '100vh',
     color: 'white'
-  }, 
+  },
   title: {
     color: 'white',
     fontSize: '3em',
@@ -32,19 +39,42 @@ const useStyles = makeStyles((theme) => ({
   ticketsButton: {
     margin: 'auto',
     textAlign: 'center',
-    
+
   },
   buttonDiv: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     paddingTop: '12%'
+  },
+  formContainer: {
+    width: '50vh',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center', 
+    margin: theme.spacing(1),
+    opacity: 0.9,
+    backgroundBlendMode: 'screen',
+    backgroundColor: 'white',
+  },
+  form: {
+  },
+  formControl: {
+    display: 'block',
+    margin: theme.spacing(1),
+    minWidth: '100%'
+  },
+  bookMovieFormContainer: {
+    display: 'flex',
+    width: '90%',
+    justifyContent: 'center'
   }
-  
 }));
 
 
 const BookMoviePage = (props) => {
+  const bookMovieFormRef = useRef()
   // film je u parametru id
   const selectedMovieId = props.match.params.id;
   const dispatch = useDispatch();
@@ -52,36 +82,51 @@ const BookMoviePage = (props) => {
   const classes = useStyles();
   const selectedMovie = useSelector(state => state.movieState.selectedMovie)
   useEffect(() => {
-    const fetchselectedMovie = async () => {
-       await dispatch(getMovieById(selectedMovieId))
-       setIsBusy(false)
+    const fetchRequiredData = async () => {
+      await dispatch(getMovieById(selectedMovieId)) // ovaj action bu postavil selectedMovie state varijablu
+      setIsBusy(false)
     }
-    fetchselectedMovie()
+    fetchRequiredData()
   }, [])
   const randomBackdropImage = {
     backgroundImage: `url(${selectedMovie != null && selectedMovie.backdropImage})`
-  } 
+  }
+  const [selectedParameters, setSelectedParameters] = useState({})
+  console.log(selectedParameters)
+
   if (isBusy) {
     return null
   } else return (
     <div className={classes.wholePage} style={randomBackdropImage}>
-        <Typography component="h1" className={classes.title}>
-          {selectedMovie.title}
-        </Typography>
-        <Typography component="h4" className={classes.subtitle}>
-          Released on {new Date(selectedMovie.releaseDate).toDateString()}
-        </Typography>
-        <Typography component="h5">
-          Actors: {selectedMovie.actors}
-        </Typography>
-        <Typography component="h6">
-          {selectedMovie.genre.toLowerCase()}
-        </Typography>
-        <Typography component="h6" className={classes.summary}>
-          {selectedMovie.summary}
-        </Typography>
-        <div className={classes.buttonDiv}>      
-        </div>     
+      <Typography component="h1" className={classes.title}>
+        {selectedMovie.title}
+      </Typography>
+      <Typography component="h4" className={classes.subtitle}>
+        Released on {new Date(selectedMovie.releaseDate).toDateString()}
+      </Typography>
+      <Typography component="h5" className={classes.subtitle}>
+        <b>Actors: {selectedMovie.actors}</b>
+      </Typography>
+      <Typography component="h6" className={classes.subtitle}>
+        <b>{selectedMovie.genre.toLowerCase()}</b>
+      </Typography>
+      <Typography component="h6" className={classes.summary}>
+        {selectedMovie.summary}
+      </Typography>
+      <Container fixed className={classes.bookMovieFormContainer}>
+        <Paper elevation={3} className={classes.formContainer}>
+          <BookMovieForm 
+            classes={classes} 
+            selectedMovie={selectedMovie} 
+            ref={bookMovieFormRef} 
+            setSelectedParameters={setSelectedParameters}
+          />
+        </Paper>
+      </Container>
+      
+     
+      { Object.keys(selectedParameters).length !== 0 && <SeatsView selectedCinema={selectedParameters.selectedCinema} /> } {/* ako smo odabrali parametre, mozemo renderirati seatsview */}
+      
     </div>
   )
 }

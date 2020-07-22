@@ -1,18 +1,8 @@
-// Cinemas view ima sljedeće mogućnosti
-
-// prvo bu forma za dodavanje novog cinema, dodaje se ime, grad, postal code i slika
-// IMPLEMENTIRANO
-
-
-// ispod toga je  popis svih kina po 3 u jednom redu -> IMPLEMENTIRANO
-
-// search - mozda
-// edit i delete slozi (delete je bitnije)
 import React, { useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
-import { TextField, Button, Menu } from '@material-ui/core';
+import { TextField, Button } from '@material-ui/core';
 import clsx from 'clsx';
 
 import { Field, Form, Formik } from 'formik';
@@ -23,9 +13,12 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import { getScreeningTimes, addNewScreeningTime } from '../../../../store/actions/screeningTimeActions'
-import screeningTime from '../../../../services/screeningTime';
 
-// import { getCinemas, addNewCinema } from '../../../../store/actions/cinemaActions'
+import ScreeningTimesTable from './ScreeningTimesTable'
+
+// stuff for table
+
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -160,16 +153,17 @@ const ScreeningTimeForm = () => {
 }
 
 
-// fetchaj sve cinema-e
+
 
 
 const ScreeningTimesView = () => {
   const dispatch = useDispatch()
+  // fetch screening times
   const classes = useStyles();
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-  let screeningTimeState = useSelector(state => state.screeningTimeState)
+  let screeningTimeState = useSelector(state => state.screeningTimeState.screening_times)
   useEffect(() => {
-    // dispatch(getCinemas())
+     dispatch(getScreeningTimes())
   }, [screeningTimeState]) // load cinemas 
   return (
     <Grid container spacing={3}>
@@ -182,7 +176,9 @@ const ScreeningTimesView = () => {
       <Grid item xs={12} md={12} lg={12}>
         {/* U ovom prikazu je prikaz svih kina */}
         <Paper className={`${fixedHeightPaper} ${classes.Paper}`}>
-
+        {/* tu bu tablcia s četiri kolone movie_id, cinema, datetime_start, datetime_end */}
+        SCREENING TIMES
+        <ScreeningTimesTable screeningTimes={screeningTimeState} />
         </Paper>
       </Grid>
     </Grid>
