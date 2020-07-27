@@ -32,4 +32,9 @@ const getReservationsForUser = async (id) => {
   return response.data
 }
 
-export default { setOccupiedSeats, saveReservation, allReservations, getReservationsForUser }
+const rateReservation = async (id, rating) => {
+  const response = await axios.patch(`${baseUrl}/rate/${id}`, rating, config)
+  return response.data;
+}
+
+export default { setOccupiedSeats, saveReservation, allReservations, getReservationsForUser, rateReservation }

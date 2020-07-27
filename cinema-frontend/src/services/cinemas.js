@@ -18,6 +18,8 @@ const allCinemas = async () => {
   return response.data; // array objekata od kojih svaki predstavlja jedno kino
 }
 
+
+
 const deleteCinema = async (id) => {
   let config = {
     headers: {

@@ -13,3 +13,10 @@ export const getReservationsForUser = (id) => {
     dispatch({ type: 'GET_RESERVATIONS_FOR_USER', payload: response})
   }
 }
+
+export const rateReservation = (id, rating) => {
+  return async dispatch => {
+    const response = await reservationService.rateReservation(id, {rating: rating});
+    dispatch({ type: 'RATE_RESERVATION', payload: response})
+  }
+}

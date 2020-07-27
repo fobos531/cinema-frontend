@@ -1,4 +1,4 @@
-import { Parallax, Background } from 'react-parallax';
+import { Parallax } from 'react-parallax';
 import React from 'react'
 import { getMovies } from '../../store/actions/movieActions'
 import { Typography } from '@material-ui/core';
@@ -7,6 +7,7 @@ import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom'
 import { Button } from '@material-ui/core';
+import Rating from '@material-ui/lab/Rating';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -59,6 +60,7 @@ const MoviesPage = () => {
               <Typography component="h6">
                 Genres: {movie.genre.toLowerCase()}
               </Typography>
+              <Rating readOnly={true} defaultValue={movie.rating} max={10} />
               <Typography component="h6">
                 {movie.summary}
               </Typography>
