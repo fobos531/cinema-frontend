@@ -1,7 +1,7 @@
 // Prvo se odabire cinema, a onda se nakon toga odabire available screening time.
 // Dok lik odabere screening time, generira se popis mjesta za odabrano kino.
 
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
@@ -10,7 +10,8 @@ import SeatsView from './components/SeatsView'
 import Paper from '@material-ui/core/Paper';
 import BookMovieForm from './components/BookMovieForm'
 import Container from '@material-ui/core/Container';
-
+import { setCurrentlySelectedMovie } from '../../store/actions/reservationProcessActions'
+import ReservationSelectionInfo from './components/ReservationSelectionInfo';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -74,13 +75,17 @@ const useStyles = makeStyles((theme) => ({
 
 
 const BookMoviePage = (props) => {
-  const bookMovieFormRef = useRef()
   // film je u parametru id
   const selectedMovieId = props.match.params.id;
+  
+  console.log(selectedMovieId)
   const dispatch = useDispatch();
   const [isBusy, setIsBusy] = useState(true);
   const classes = useStyles();
   const selectedMovie = useSelector(state => state.movieState.selectedMovie)
+  dispatch(setCurrentlySelectedMovie(selectedMovieId))
+  const selectedCinema = useSelector(state => state.reservationProcessState.selectedCinema)
+  const selectedScreeningTime = useSelector(state => state.reservationProcessState.currentReservation.screeningTime_id)
   useEffect(() => {
     const fetchRequiredData = async () => {
       await dispatch(getMovieById(selectedMovieId)) // ovaj action bu postavil selectedMovie state varijablu
@@ -92,7 +97,7 @@ const BookMoviePage = (props) => {
     backgroundImage: `url(${selectedMovie != null && selectedMovie.backdropImage})`
   }
   const [selectedParameters, setSelectedParameters] = useState({})
-  console.log(selectedParameters)
+
 
   if (isBusy) {
     return null
@@ -115,17 +120,19 @@ const BookMoviePage = (props) => {
       </Typography>
       <Container fixed className={classes.bookMovieFormContainer}>
         <Paper elevation={3} className={classes.formContainer}>
-          <BookMovieForm 
+          {selectedMovie != null && <BookMovieForm 
             classes={classes} 
             selectedMovie={selectedMovie} 
-            ref={bookMovieFormRef} 
             setSelectedParameters={setSelectedParameters}
-          />
+          /> }
         </Paper>
+        { selectedScreeningTime != null && 
+          <Paper elevation={3} className={classes.formContainer}>
+            <ReservationSelectionInfo /> 
+          </Paper> 
+        }
       </Container>
-      
-     
-      { Object.keys(selectedParameters).length !== 0 && <SeatsView selectedCinema={selectedParameters.selectedCinema} /> } {/* ako smo odabrali parametre, mozemo renderirati seatsview */}
+      { selectedCinema != null && <SeatsView selectedCinema={selectedCinema} /> } {/* ako smo odabrali parametre, mozemo renderirati seatsview */}
       
     </div>
   )

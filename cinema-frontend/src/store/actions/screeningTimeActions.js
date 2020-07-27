@@ -11,7 +11,7 @@ export const addNewScreeningTime = (newScreeningTime) => {
   return async dispatch => {
     console.log(newScreeningTime)
     await screeningTimeService.addScreeningTime(newScreeningTime);
-   // dispatch(getScreeningTimes())
+    dispatch(getScreeningTimes())
   }
 }
 

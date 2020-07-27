@@ -64,10 +64,12 @@ const CinemaForm = () => {
     cinemaData.append('city', formData.city)
     cinemaData.append('postalCode', formData.postalCode)
     cinemaData.append('numberOfSeats', formData.numberOfSeats)
+    cinemaData.append('ticketPrice', formData.ticketPrice)
     cinemaData.append('image', file)
     dispatch(addNewCinema(cinemaData))
     document.getElementById("cinemaName").value = ''
     document.getElementById("numberOfSeats").value = ''
+    document.getElementById("ticketPrice").value = ''
     document.getElementById("city").value = ''
     document.getElementById("postalCode").value = ''
 
@@ -93,6 +95,14 @@ const CinemaForm = () => {
             fullWidth
             id="numberOfSeats"
             autoComplete="numberOfSeats"
+            onChange={(event) => handleFormChange(event)}
+          />
+          <Field name="ticketPrice" as={TextField} label="Ticket price per seat" variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="ticketPrice"
+            autoComplete="ticketPrice"
             onChange={(event) => handleFormChange(event)}
           />
           <Field name="city" as={TextField} label="City" variant="outlined"

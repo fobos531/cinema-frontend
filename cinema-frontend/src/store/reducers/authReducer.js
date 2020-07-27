@@ -1,6 +1,6 @@
 
 const initialState = {
-  loggedUser: {},
+  loggedUser: null,
   token: localStorage.getItem('userToken')
 }
 
@@ -12,7 +12,8 @@ const authReducer = (state = initialState, action) => {
       localStorage.setItem('userToken', action.payload.token)
       localStorage.setItem('loggedUser', JSON.stringify(action.payload.user))
       return {...state, loggedUser: action.payload.user}
-    
+    case 'SET_ACTIVE_USER':
+      return {...state, loggedUser: action.payload }
     case 'LOGIN_FAIL':
     case 'LOGOUT':
       localStorage.getItem('userToken');

@@ -4,10 +4,12 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
+import { useDispatch, useSelector } from 'react-redux'
+import { setCurrentlySelectedCinema, setCurrentlySelectedScreeningTime } from '../../../store/actions/reservationProcessActions'
 const moment = require('moment')
 
-const BookMovieForm = React.forwardRef(({ classes, selectedMovie, setSelectedParameters }) => {
-  // trebamo fetchat cinemae i screening timese
+const BookMovieForm = ( { classes, selectedMovie }) => {
+  const dispatch = useDispatch()
   const [selectedCinema, setSelectedCinema] = useState('')
   const [selectedScreeningTime, setSelectedScreeningTime] = useState('')
   const handleCinemaChange = (event) => {
@@ -17,10 +19,8 @@ const BookMovieForm = React.forwardRef(({ classes, selectedMovie, setSelectedPar
     setSelectedScreeningTime(event.target.value)
   }
   const handleSubmit = () => {
-    setSelectedParameters({
-      selectedCinema,
-      selectedScreeningTime
-    })
+    dispatch(setCurrentlySelectedCinema(selectedCinema))
+    dispatch(setCurrentlySelectedScreeningTime(selectedScreeningTime))
   }
   return (
     <>
@@ -72,6 +72,6 @@ const BookMovieForm = React.forwardRef(({ classes, selectedMovie, setSelectedPar
       </form>
     </>
   )
-})
+}
 
 export default BookMovieForm

@@ -5,7 +5,7 @@ export const registerUser = (newUser) => {
     const response = await userService.register(newUser);
     console.log(response)
     // successfully registered
-    dispatch({ type: 'REGISTER_SUCCESS', payload: response });
+    // dispatch({ type: 'REGISTER_SUCCESS', payload: response });
   }
 }
 

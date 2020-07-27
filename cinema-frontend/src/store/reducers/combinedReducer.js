@@ -5,6 +5,7 @@ import movieReducer from './movieReducer';
 import userReducer from './userReducer';
 import screeningTimeReducer from './screeningTimeReducer'
 import reservationProcessReducer from './reservationProcessReducer';
+import reservationReducer from './reservationReducer';
 
 const combinedReducer = combineReducers({
   authenticationState: authReducer,
@@ -12,7 +13,8 @@ const combinedReducer = combineReducers({
   movieState: movieReducer,
   usersState: userReducer,
   screeningTimeState: screeningTimeReducer,
-  reservationProcessState: reservationProcessReducer
+  reservationProcessState: reservationProcessReducer,
+  reservationsState: reservationReducer
 });
 
 export default combinedReducer

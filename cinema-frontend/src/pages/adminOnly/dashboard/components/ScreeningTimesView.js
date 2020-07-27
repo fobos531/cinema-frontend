@@ -53,8 +53,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
-
 const ScreeningTimeForm = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
@@ -164,7 +162,7 @@ const ScreeningTimesView = () => {
   let screeningTimeState = useSelector(state => state.screeningTimeState.screening_times)
   useEffect(() => {
      dispatch(getScreeningTimes())
-  }, [screeningTimeState]) // load cinemas 
+  }, []) // load cinemas 
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} md={12} lg={12}>
@@ -177,7 +175,6 @@ const ScreeningTimesView = () => {
         {/* U ovom prikazu je prikaz svih kina */}
         <Paper className={`${fixedHeightPaper} ${classes.Paper}`}>
         {/* tu bu tablcia s četiri kolone movie_id, cinema, datetime_start, datetime_end */}
-        SCREENING TIMES
         <ScreeningTimesTable screeningTimes={screeningTimeState} />
         </Paper>
       </Grid>

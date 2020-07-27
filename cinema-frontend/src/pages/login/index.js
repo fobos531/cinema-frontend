@@ -19,7 +19,9 @@ import { object, string } from 'yup';
 import Copyright from '../components/copyright'
 import loginService from '../../services/login'
 import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import { loginUser } from '../../store/actions/authActions'
+import ForgotPasswordDialog from './components/ForgotPasswordDialog'
 
 const Alert = (props) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -72,7 +74,8 @@ const LoginForm = () => {
   const handleClose = (event, reason) => {
     setOpen(false); 
   };
-
+  const history = useHistory()
+  const [forgotPasswordOpened, setForgotPasswordOpened] = useState(false)
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
@@ -97,6 +100,7 @@ const LoginForm = () => {
                   setOpen(true)
                 } else { // korisnik se uspješno logirao
                   dispatch(loginUser(loginInfo))
+                  history.push("/")
                 }
               });
             }}>
@@ -136,10 +140,11 @@ const LoginForm = () => {
           </Formik>
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
+              <Button onClick={() => setForgotPasswordOpened(true)} variant="body2">
                 Forgot password?
-              </Link>
+              </Button>
             </Grid>
+            {forgotPasswordOpened && <ForgotPasswordDialog open={true} setForgotPasswordOpened={setForgotPasswordOpened} />}
             <Grid item>
               <Link href="/register" variant="body2">
                 {"Don't have an account? Sign Up Here!"}

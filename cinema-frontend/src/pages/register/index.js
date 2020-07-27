@@ -23,6 +23,12 @@ const Alert = (props) => {
 }
 
 const useStyles = makeStyles((theme) => ({
+  wholePage: {
+    backgroundImage: `url(https://source.unsplash.com/featured/?cinema)`,
+    backgroundSize: 'cover',
+    width: '100vw',
+    height: '100vh',
+  },
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
@@ -61,7 +67,7 @@ const RegisterForm = () => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" classes={classes.wholePage}>
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -75,12 +81,14 @@ const RegisterForm = () => {
             firstName: string().required('Please enter your first name!'),
             lastName: string().required('Please enter your last name!'),
             username: string().required('Please enter a desired username!'),
-            email: string().required('Please enter your email!'),
-            password: string().required('Password is required!'),
+            email: string().required('Please enter your email!').email("You have to enter a valid email!"),
+            password: string().required('Password is required!').min(4, "Password must be min 4 characters long!").max(30, "Password must be max 30 characters long!"),
           })}
-          initialValues={initialValues} onSubmit={(newUser) => {
+          initialValues={initialValues} onSubmit={(newUser, {resetForm}) => {
+            resetForm(initialValues) // reset form with initial values
             dispatch(registerUser(newUser))
             setOpen(true)
+            
           }}
         >
           <Form className={classes.form}>
@@ -166,7 +174,7 @@ const RegisterForm = () => {
       </Box>
       <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success">
-          Sucessfully registered! You may log in on the main page now.
+          Sucessfully registered! You may now log in using the button in the top right corner.
         </Alert>
       </Snackbar>
     </Container>

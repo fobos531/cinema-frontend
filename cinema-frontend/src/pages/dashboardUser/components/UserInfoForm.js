@@ -73,16 +73,6 @@ const UserInfoForm = ({ loggedUser }) => {
           autoComplete="email"
           onChange={(event) => handleFormChange(event)}
         />
-        {/* <Field as={TextField}
-          label="Password" variant="outlined"
-          margin="normal"
-          fullWidth
-          type="password"
-          placeholder="new password"
-          id="password"
-          autoComplete="password"
-          onChange={(event) => handleFormChange(event)}
-        /> */}
         <FormControl variant="outlined" className={classes.passwordField}>
           <InputLabel htmlFor="password">Password</InputLabel>
           <Field as={OutlinedInput}

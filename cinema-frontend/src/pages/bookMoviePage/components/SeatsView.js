@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/styles';
-import { getSeatsForSelectedCinema, setOccupiedSeats } from '../../../store/actions/reservationProcessActions'
+import { getSeatsForSelectedCinema, setOccupiedSeats, setPickedSeats } from '../../../store/actions/reservationProcessActions'
 import { useSelector, useDispatch } from 'react-redux'
 import { styled } from '@material-ui/core/styles';
 import { compose, spacing, palette } from '@material-ui/system';
 import Grid from '@material-ui/core/Grid';
 import { Button } from '@material-ui/core';
+import BookedReservationDialog from './BookedReservationDialog';
+import reservationService from '../../../services/reservations'
 
 
 const Box = styled('div')(compose(spacing, palette));
@@ -58,7 +60,7 @@ const useStyles = makeStyles(theme => ({
   occupiedDisabledSeat: {
     pointerEvents: 'none'
   },
-  proceedButton: {
+  makeReservationButton: {
     display: 'block',
     margin: '3%'
   }
@@ -66,18 +68,19 @@ const useStyles = makeStyles(theme => ({
 
 const SeatsView = ({ selectedCinema }) => {
   const dispatch = useDispatch()
+  // state za cijelu rezervaciju
+  const reservationObject = useSelector(state => state.reservationProcessState.currentReservation)
+  //state za dialog
+  const [dialogDisplayed, setDialogDisplayed] = useState(false)
   // trebam dohvatiti seatse (globalni state)
   const seats = useSelector(state => state.reservationProcessState.seatsForSelectedCinema);
-
   // ovdje spremam local state za seatse 
   const [localSeats, setLocalSeats] = useState([])
-
+  const [finishedReservation, setFinishedReservation] = useState(null)
   const classes = useStyles();
-
   useEffect(() => {
     const fetchRequiredData = async () => {
       await dispatch(getSeatsForSelectedCinema(selectedCinema))
-
     }
     fetchRequiredData()
   }, [])
@@ -85,15 +88,11 @@ const SeatsView = ({ selectedCinema }) => {
   useEffect(() => {
     if (seats.length != 0) setLocalSeats(seats)
   }, [seats])
-
-  console.log("seats", seats);
-  console.log("local seat state", localSeats)
-
+ 
   // moram napravit array of arrayova, svaki element outer arraya predstavlja jedan row, a unutar njega imam respective seatse
   let rowedSeats = [];
   let oneRow = []
   for (let i = 0; i < seats.length; i++) {
-    // debugger
     if (i == 0) {
       oneRow.push(seats[i])
       continue
@@ -105,8 +104,6 @@ const SeatsView = ({ selectedCinema }) => {
       continue;
     }
     oneRow.push(seats[i]);
-
-
   }
   if (oneRow != []) rowedSeats.push(oneRow);
   const toggleSeatOccupiedStatus = (id) => {
@@ -115,8 +112,13 @@ const SeatsView = ({ selectedCinema }) => {
       seatToToggle.occupied = 1
     } else seatToToggle.occupied = 0
     setLocalSeats(localSeats.map(seat => seat.id == id ? seatToToggle : seat))
+    dispatch(setPickedSeats(localSeats))
   }
   console.log("rowed seats", rowedSeats)
+  
+  const pickedSeats = localSeats.filter(seat => seat.occupied == 1)
+  console.log("picked seats", pickedSeats)
+  console.log("finishedReservation", finishedReservation)
   return (
     <>
       {/* Renderiranje sjedala */}
@@ -148,21 +150,26 @@ const SeatsView = ({ selectedCinema }) => {
           type="button"
           variant="contained"
           color="primary"
-          className={classes.proceedButton}
-          onClick={() => {
+          className={classes.makeReservationButton}
+          onClick={ async () => {
             let seatsToSubmit = localSeats.map(seat => {
               if (seat.occupied == 1) seat.occupied = 2
               return seat
             })
             dispatch(setOccupiedSeats(selectedCinema, seatsToSubmit))
+            // sad saveaj rezervaciju
+            const reservation = await reservationService.saveReservation({...reservationObject, pickedSeats})
+            setFinishedReservation(reservation)
+            setDialogDisplayed(true)
           }}
         >
-          Proceed
+          Make reservation
         </Button>
+        { dialogDisplayed && finishedReservation != null && 
+          <BookedReservationDialog initialOpenState={true} finishedReservation={finishedReservation} /> 
+          } 
       </Grid>
-
       {/* Tu dolje morem staviti legendu*/}
-
       <Grid container className={classes.seatContainer}>
           <Grid item className={classes.seatInfo}>
             <div
