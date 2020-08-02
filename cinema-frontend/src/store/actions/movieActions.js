@@ -21,12 +21,6 @@ export const deleteMovie = (id) => {
   }
 }
 
-export const getRandomMovie = () => {
-  return async dispatch => {
-    const randomMovie = await movieService.getRandomMovie()
-    dispatch({ type: 'GET_RANDOM_MOVIE', payload: randomMovie })
-  }
-}
 
 export const getMovieById = (id) => {
   return async dispatch => {

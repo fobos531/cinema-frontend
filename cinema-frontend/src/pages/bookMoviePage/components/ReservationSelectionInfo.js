@@ -9,6 +9,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import { updateTotalPrice } from '../../../store/actions/reservationProcessActions'
 
+
 const useStyles = makeStyles((theme) => ({
   formContainer: {
     width: '50vh',
@@ -27,6 +28,7 @@ const ReservationSelectionInfo = () => {
   const dispatch = useDispatch()
   const classes = useStyles();
   const currentReservation = useSelector(state => state.reservationProcessState.currentReservation); // objekt
+  const selectedSeats = useSelector(state=>state.reservationProcessState.currentReservation.seats)
   const currentCinemaId = useSelector(state => state.reservationProcessState.selectedCinema) // cinema_id
   const [ currCinemaTicketPrice, setCurrCinemaTicketPrice ] = useState(0)
   useEffect(() => {
@@ -34,7 +36,8 @@ const ReservationSelectionInfo = () => {
       setCurrCinemaTicketPrice(await miscService.getCinemaTicketPrice(currentCinemaId)) // ovaj action bu postavil selectedMovie state varijablu
     }
     fetchRequiredData()
-  }, [currentCinemaId])
+    dispatch(updateTotalPrice(document.getElementById("totalPrice").innerHTML))
+  }, [currentCinemaId, selectedSeats])
   // treba mi ticket price od cinema
   const filteredSelectedSeats = currentReservation.seats.filter(seat => seat.occupied == 1);
   // pri svakom updateu od componenta bude se updatal i price, a to bu globally u storeu
@@ -51,7 +54,7 @@ const ReservationSelectionInfo = () => {
         <TableBody>
           <TableRow>
             <TableCell align="left" id="noOfSeats">{filteredSelectedSeats.length}</TableCell>
-            <TableCell>{totalPrice}</TableCell>  
+            <TableCell id="totalPrice">{totalPrice}</TableCell>  
           </TableRow>      
         </TableBody>
       </Table>

@@ -77,14 +77,3 @@ export const mainListItems = (
   </div>
 );
 
-export const secondaryListItems = (
-  <div>
-    <ListSubheader inset>Miscellaneous</ListSubheader>
-    <ListItem button>
-      <ListItemIcon>
-        <PersonIcon />
-      </ListItemIcon>
-      <ListItemText primary="Account settings" />
-    </ListItem>
-  </div>
-);

@@ -8,7 +8,7 @@ let config = {
 }
 
 const setOccupiedSeats = async (id, seats) => { //by cinema id
-  const url = (`${baseUrl}/cinema/${id}`)
+  const url = (`${baseUrl}/screeningTime/${id}`)
   console.log(url, seats)
   const response = await axios.patch(url, seats, config)
   return response.data

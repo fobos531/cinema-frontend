@@ -10,7 +10,7 @@ export const getCinemas = () => {
 // ovo se trenutni nigdje ne koristi
 export const getAvailableCinemas = () => {
   return async dispatch => {
-    const response = await cinemaService.getAvailableCinemas
+    const response = await cinemaService.getAvailableCinemas()
   }
 }
 

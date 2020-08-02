@@ -20,3 +20,8 @@ export const setActiveUser = (user) => {
   }
 }
 
+export const logout = () => {
+  return {
+    type: 'LOGOUT',
+  }
+}

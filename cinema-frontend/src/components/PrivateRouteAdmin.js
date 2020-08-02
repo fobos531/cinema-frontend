@@ -1,27 +1,27 @@
 import React, { useState, useEffect } from 'react'
-import { Route, Redirect } from "react-router-dom"
+import { Route, Redirect, useHistory } from "react-router-dom"
 import miscService from '../services/misc'
 
-const PrivateRoute = ({ component: Component, ...rest }) => {
+const PrivateRouteAdmin = ({ component: Component, ...rest }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+
   const [isBusy, setIsBusy] = useState(true)
   useEffect(() => {
-    miscService.verifyToken().then(response => {
-      if (response.authenticated == true) {
-        setIsAuthenticated(true)
-      }
+    miscService.verifyTokenAdmin().then(response => {
+      console.log("response", response)
+      setIsAuthenticated(response.authenticated)
       setIsBusy(false)
     }).catch(error => {
       setIsBusy(false)
     })
   }, []) // do this only once
   if (isBusy) return null
+  console.log("authenticated:", isAuthenticated)
+ 
   if (isAuthenticated) return (
     <Route {...rest} render={props => <Component {...props} />} />
   )
-  else return (
-    <Redirect to="/login" />
-  )
+  if (isAuthenticated == false) {return (<Redirect to="/" />)}
 }
 
-export default PrivateRoute
+export default PrivateRouteAdmin

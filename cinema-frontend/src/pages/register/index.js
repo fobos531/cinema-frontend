@@ -14,9 +14,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { object, string } from 'yup';
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Copyright from '../components/copyright'
 import { registerUser } from '../../store/actions/registerActions'
+import { Redirect } from "react-router-dom"
 
 const Alert = (props) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -59,13 +60,16 @@ const initialValues = {
 
 
 const RegisterForm = () => {
+  const loggedUser = useSelector(state => state.authenticationState.loggedUser)
   const classes = useStyles();
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const handleClose = (event, reason) => {
     setOpen(false); 
   };
-
+  if (loggedUser != null) {
+    return <Redirect to="/" />
+  }
   return (
     <Container component="main" maxWidth="xs" classes={classes.wholePage}>
       <CssBaseline />

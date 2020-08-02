@@ -47,12 +47,16 @@ const ReservationsTable = ({ reservations }) => {
     data.push([reservation.screeningTime_id.movie_id.title, reservation.screeningTime_id.cinema_id.name, seatsString,
       moment(reservation.screeningTime_id.datetime_start).format('MMMM Do YYYY, HH:mm'),
       moment(reservation.screeningTime_id.datetime_end).format('MMMM Do YYYY, HH:mm'),
-      reservation.totalPrice])
+      `$${reservation.totalPrice}`])
   })
   console.log(data)
   const options = {
     filterType: 'checkbox',
     selectableRows: 'none',
+    downloadOptions: {
+      filename: 'MyReservations.csv',
+      separator: ';'
+    }
   };
   return (
     <MUIDataTable

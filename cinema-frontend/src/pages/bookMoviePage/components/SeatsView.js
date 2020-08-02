@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/styles';
-import { getSeatsForSelectedCinema, setOccupiedSeats, setPickedSeats } from '../../../store/actions/reservationProcessActions'
+import { getSeatsForSelectedScreeningTime,
+         setOccupiedSeats,
+         setPickedSeats,
+         setOrderId, 
+} from '../../../store/actions/reservationProcessActions'
 import { useSelector, useDispatch } from 'react-redux'
 import { styled } from '@material-ui/core/styles';
 import { compose, spacing, palette } from '@material-ui/system';
@@ -8,6 +12,7 @@ import Grid from '@material-ui/core/Grid';
 import { Button } from '@material-ui/core';
 import BookedReservationDialog from './BookedReservationDialog';
 import reservationService from '../../../services/reservations'
+import PaypalButton from '../../../components/PaypalButton'
 
 
 const Box = styled('div')(compose(spacing, palette));
@@ -61,33 +66,40 @@ const useStyles = makeStyles(theme => ({
     pointerEvents: 'none'
   },
   makeReservationButton: {
-    display: 'block',
+    display: 'inline-block',
+    whiteSpace: 'no-wrap',
     margin: '3%'
   }
 }))
 
-const SeatsView = ({ selectedCinema }) => {
+const SeatsView = ({ selectedScreeningTime }) => {
+  const currentScreeningTime = useSelector(state => state.reservationProcessState.currentReservation.screeningTime_id)
+
   const dispatch = useDispatch()
+  // did user pay?
+  const [paid, setPaid] = useState(false)
   // state za cijelu rezervaciju
   const reservationObject = useSelector(state => state.reservationProcessState.currentReservation)
   //state za dialog
   const [dialogDisplayed, setDialogDisplayed] = useState(false)
   // trebam dohvatiti seatse (globalni state)
-  const seats = useSelector(state => state.reservationProcessState.seatsForSelectedCinema);
+  const seats = useSelector(state => state.reservationProcessState.seatsForSelectedScreeningTime);
   // ovdje spremam local state za seatse 
   const [localSeats, setLocalSeats] = useState([])
   const [finishedReservation, setFinishedReservation] = useState(null)
   const classes = useStyles();
   useEffect(() => {
     const fetchRequiredData = async () => {
-      await dispatch(getSeatsForSelectedCinema(selectedCinema))
+      await dispatch(getSeatsForSelectedScreeningTime(selectedScreeningTime))
     }
     fetchRequiredData()
-  }, [])
+  }, [currentScreeningTime])
 
   useEffect(() => {
     if (seats.length != 0) setLocalSeats(seats)
   }, [seats])
+
+  
  
   // moram napravit array of arrayova, svaki element outer arraya predstavlja jedan row, a unutar njega imam respective seatse
   let rowedSeats = [];
@@ -107,12 +119,16 @@ const SeatsView = ({ selectedCinema }) => {
   }
   if (oneRow != []) rowedSeats.push(oneRow);
   const toggleSeatOccupiedStatus = (id) => {
+    console.log(document.getElementById("totalPrice").textContent)
     const seatToToggle = localSeats.find(seat => seat.id == id);
     if (seatToToggle.occupied == 0) { // postavi status na selected
       seatToToggle.occupied = 1
     } else seatToToggle.occupied = 0
     setLocalSeats(localSeats.map(seat => seat.id == id ? seatToToggle : seat))
+  //  dispatch(updateTotalPrice(document.getElementById("totalPrice").innerHTML))
+
     dispatch(setPickedSeats(localSeats))
+    // moram i updatati total price u storeu
   }
   console.log("rowed seats", rowedSeats)
   
@@ -146,7 +162,16 @@ const SeatsView = ({ selectedCinema }) => {
             </Grid>
           ))
         }
-        <Button
+        {!paid && <PaypalButton
+            amount={reservationObject.totalPrice}
+            currency={'USD'}
+            onSuccess={(details, data) => {
+              setPaid(true)
+              // save transaction
+              dispatch(setOrderId(data.orderID))
+            }}
+        />}
+        {paid && <Button
           type="button"
           variant="contained"
           color="primary"
@@ -156,16 +181,17 @@ const SeatsView = ({ selectedCinema }) => {
               if (seat.occupied == 1) seat.occupied = 2
               return seat
             })
-            dispatch(setOccupiedSeats(selectedCinema, seatsToSubmit))
+            dispatch(setOccupiedSeats(selectedScreeningTime, seatsToSubmit))
             // sad saveaj rezervaciju
             const reservation = await reservationService.saveReservation({...reservationObject, pickedSeats})
             setFinishedReservation(reservation)
             setDialogDisplayed(true)
           }}
-        >
-          Make reservation
-        </Button>
-        { dialogDisplayed && finishedReservation != null && 
+          >
+          Finish reservation
+        </Button>}
+        
+        {dialogDisplayed && finishedReservation != null && 
           <BookedReservationDialog initialOpenState={true} finishedReservation={finishedReservation} /> 
           } 
       </Grid>

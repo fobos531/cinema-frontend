@@ -18,10 +18,11 @@ import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { object, string } from 'yup';
 import Copyright from '../components/copyright'
 import loginService from '../../services/login'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { loginUser } from '../../store/actions/authActions'
 import ForgotPasswordDialog from './components/ForgotPasswordDialog'
+import { Redirect } from "react-router-dom"
 
 const Alert = (props) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -69,13 +70,17 @@ const initialValues = {
 const LoginForm = () => {
   const classes = useStyles();
   const dispatch = useDispatch()
-
+  const loggedUser = useSelector(state => state.authenticationState.loggedUser)
+ 
   const [open, setOpen] = useState(false);
   const handleClose = (event, reason) => {
     setOpen(false); 
   };
   const history = useHistory()
   const [forgotPasswordOpened, setForgotPasswordOpened] = useState(false)
+  if (loggedUser != null) {
+    return <Redirect to="/" />
+  }
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
@@ -122,10 +127,6 @@ const LoginForm = () => {
                 autoComplete="current-password"
               />
               <ErrorMessage name="password" /><br></br>
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" disableRipple={false} />}
-                label="Remember me"
-              />
               <Button
                 type="submit"
                 fullWidth
@@ -156,7 +157,7 @@ const LoginForm = () => {
           </Box>
           <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
             <Alert onClose={handleClose} severity="error">
-              Invalid username or password! Please check your input.
+              Invalid email or password! Please check your input.
             </Alert>
           </Snackbar>
         </div>

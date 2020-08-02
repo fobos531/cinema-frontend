@@ -1,5 +1,5 @@
 import { Parallax } from 'react-parallax';
-import React from 'react'
+import React, { useEffect } from 'react'
 import { getMovies } from '../../store/actions/movieActions'
 import { Typography } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux'
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
   ticketsButton: {
     opacity: 1,
-  }
+  },
 }));
 
 
@@ -35,8 +35,11 @@ const MoviesPage = () => {
   const dispatch = useDispatch()
   const classes = useStyles();
   // trebam dohvatiti listu movieja
-  dispatch(getMovies())
+  useEffect(() => {
+    dispatch(getMovies())
+  },[])
   const allMovies = useSelector(state => state.movieState.movies)
+  const loggedUser = useSelector(state => state.authenticationState.loggedUser)
   return (
     <div>
       {allMovies.map(movie => {
@@ -64,9 +67,9 @@ const MoviesPage = () => {
               <Typography component="h6">
                 {movie.summary}
               </Typography>
-              <Link to={`/movie/book/${movie.id}`}>
-                <Button type="button" variant="contained" color="primary" className={classes.ticketsButton}>
-                  Buy tickets
+              <Link to={`/movie/book/${movie.id}`} style={loggedUser == null ? {pointerEvents: 'none'} : null}>
+                <Button type="button" disabled={loggedUser == null ? true : false} variant="contained" color="primary" className={classes.ticketsButton}>
+                  {loggedUser == null ? "Log in to make a reservation" : "Buy tickets"}
                 </Button>
               </Link>
             </Paper>

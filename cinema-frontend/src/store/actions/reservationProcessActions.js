@@ -1,10 +1,10 @@
 import reservationsService from '../../services/reservations'
 import miscService from '../../services/misc'
 
-export const getSeatsForSelectedCinema = (id) => {
+export const getSeatsForSelectedScreeningTime = (id) => {
   return async dispatch => {
-    const response = await miscService.getAllSeatsByCinemaId(id);
-    dispatch({ type: 'GET_SEATS_FOR_SELECTED_CINEMA', payload: response})
+    const response = await miscService.getAllSeatsByScreeningTimeId(id);
+    dispatch({ type: 'GET_SEATS_FOR_SELECTED_SCREENING_TIME', payload: response})
   }
 }
 
@@ -43,9 +43,17 @@ export const setCurrentlySelectedMovie = (movie) => {
   }
 }
 
-export const updateTotalPrice = (movie) => {
+export const updateTotalPrice = (price) => {
+  console.log(price)
   return {
     type: 'UPDATE_TOTAL_PRICE',
-    payload: movie,
+    payload: Number(price),
+  }
+}
+
+export const setOrderId = (orderId) => {
+  return {
+    type: 'SET_ORDER_ID',
+    payload: orderId,
   }
 }

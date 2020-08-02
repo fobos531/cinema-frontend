@@ -1,6 +1,6 @@
 
 const initialState = {
-  seatsForSelectedCinema: [], // tu dohvaćamo sjedala za odabrano kino
+  seatsForSelectedScreeningTime: [], // tu dohvaćamo sjedala za odabrano kino
   selectedCinema: null,
   selectedMovie: null,
   currentReservation: {
@@ -13,9 +13,9 @@ const initialState = {
 
 const reservationProcessReducer = (state = initialState, action) => {
   switch(action.type) {
-    case 'GET_SEATS_FOR_SELECTED_CINEMA':
+    case 'GET_SEATS_FOR_SELECTED_SCREENING_TIME':
     case 'SET_OCCUPIED_SEATS':
-      state = { ...state, seatsForSelectedCinema: action.payload }
+      state = { ...state, seatsForSelectedScreeningTime: action.payload }
       return state
     case 'SET_PICKED_SEATS':
       state = { ...state, currentReservation: {...state.currentReservation, seats: action.payload } }
@@ -31,6 +31,9 @@ const reservationProcessReducer = (state = initialState, action) => {
       return state
     case 'UPDATE_TOTAL_PRICE':
       state = { ...state, currentReservation: {...state.currentReservation, totalPrice: action.payload } }
+      return state
+    case 'SET_ORDER_ID':
+      state = { ...state, currentReservation: {...state.currentReservation, paypalOrderId: action.payload } }
       return state
     default:
       return state

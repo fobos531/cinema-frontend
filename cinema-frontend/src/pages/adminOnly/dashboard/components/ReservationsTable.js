@@ -16,7 +16,7 @@ const ReservationsTable = ({ reservations }) => {
   const data = []
   reservations.map(reservation => {
     let seatsString = reservation.seats.map(seat => seat.seat_name).join(", ");
-    data.push([reservation.user_id.name, seatsString, reservation.totalPrice])
+    data.push([reservation.user_id.name, seatsString, `$${reservation.totalPrice}`])
   })
   console.log(data)
   const options = {

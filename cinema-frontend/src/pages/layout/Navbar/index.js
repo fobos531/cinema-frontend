@@ -1,13 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Toolbar from '@material-ui/core/Toolbar';
 import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
-import { Link as RouterLink } from 'react-router-dom'
+import { Link as RouterLink, useHistory } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux';
-import { setActiveUser } from '../../../store/actions/authActions'
+import { setActiveUser, logout } from '../../../store/actions/authActions'
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
   },
   appBar: {
     borderBottom: `1px solid ${theme.palette.divider}`,
-    flex:1,
+    flex: 1,
     flexDirection: 'row',
   },
   toolbar: {
@@ -36,13 +36,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Navbar = () => {
-  const dispatch = useDispatch() 
-  
+  const dispatch = useDispatch()
+  const history = useHistory();
   //prvo probaj dohvatit usera iz state-a, ak ga nema tu, onda ga dohvati iz local storage
   let userState = useSelector(state => state.authenticationState.loggedUser)
   if (userState == null) { //if empty object
-    if(JSON.parse(localStorage.getItem('loggedUser'))) { //ako imamo u local storageu
- //     userState = JSON.parse(localStorage.getItem('loggedUser'))
+    if (JSON.parse(localStorage.getItem('loggedUser'))) { //ako imamo u local storageu
+      //     userState = JSON.parse(localStorage.getItem('loggedUser'))
       dispatch(setActiveUser(JSON.parse(localStorage.getItem('loggedUser'))))
     }
   }
@@ -65,12 +65,23 @@ const Navbar = () => {
             <RouterLink component={Link} variant="button" color="textPrimary" to="/user/dashboard" className={classes.link}>
               Settings
             </RouterLink>
-            {userState != null && userState.user_type == "admin" && 
-            <RouterLink component={Link} variant="button" color="textPrimary" to="/admin/dashboard" className={classes.link}>
-              Admin dashboard
+            {userState != null && userState.user_type == "administrator" &&
+              <RouterLink component={Link} variant="button" color="textPrimary" to="/admin/dashboard" className={classes.link}>
+                Admin dashboard
             </RouterLink>}
+
           </nav>
         </Toolbar>
+        {userState != null && <Button component={Button} variant="outlined" color="primary" onClick={() => {
+          localStorage.removeItem('loggedUser')
+          localStorage.removeItem('userToken')
+          dispatch(logout())
+          history.push('/')
+        }}
+          className={`${classes.link} ${classes.loginButton}`}
+        >
+          Logout
+        </Button> }
         {userState == null &&
           <>
             <RouterLink component={Button} variant="outlined" color="primary" to="/login" className={`${classes.link} ${classes.loginButton}`}>
@@ -80,7 +91,7 @@ const Navbar = () => {
               Register
             </RouterLink>
           </>
-        }    
+        }
       </AppBar>
     </>
   );

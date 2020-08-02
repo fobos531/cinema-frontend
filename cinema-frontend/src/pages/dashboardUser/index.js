@@ -29,7 +29,7 @@ const DashboardUser = () => {
   return (
     <div className={classes.center}>
       <h1 className={classes.title}>
-        User profile information
+        Hi, {userState.name}!
       </h1><br></br>
       <UserInfoForm loggedUser={userState} className={classes.UserInfoForm} />
     </div>

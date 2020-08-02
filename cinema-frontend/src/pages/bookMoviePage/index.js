@@ -96,7 +96,6 @@ const BookMoviePage = (props) => {
   const randomBackdropImage = {
     backgroundImage: `url(${selectedMovie != null && selectedMovie.backdropImage})`
   }
-  const [selectedParameters, setSelectedParameters] = useState({})
 
 
   if (isBusy) {
@@ -123,7 +122,6 @@ const BookMoviePage = (props) => {
           {selectedMovie != null && <BookMovieForm 
             classes={classes} 
             selectedMovie={selectedMovie} 
-            setSelectedParameters={setSelectedParameters}
           /> }
         </Paper>
         { selectedScreeningTime != null && 
@@ -132,7 +130,7 @@ const BookMoviePage = (props) => {
           </Paper> 
         }
       </Container>
-      { selectedCinema != null && <SeatsView selectedCinema={selectedCinema} /> } {/* ako smo odabrali parametre, mozemo renderirati seatsview */}
+      { selectedCinema != null && <SeatsView selectedScreeningTime={selectedScreeningTime} /> } {/* ako smo odabrali parametre, mozemo renderirati seatsview */}
       
     </div>
   )

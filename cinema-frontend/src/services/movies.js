@@ -17,10 +17,6 @@ const allMovies = async () => {
   return response.data; // array objekata od kojih svaki predstavlja jedno kino
 }
 
-const getRandomMovie = async () => {
-  const response = await axios.get("/api/misc/random/movie")
-  return response.data; // array objekata od kojih svaki predstavlja jedno kino
-}
 
 const deleteMovie = async (id) => {
   const response = await axios.delete(`${baseUrl}/${id}`)
@@ -33,4 +29,4 @@ const getMovieById = async (id) => {
   return response.data
 }
 
-export default { addMovie, allMovies, deleteMovie, getRandomMovie, getMovieById }
+export default { addMovie, allMovies, deleteMovie, getMovieById }

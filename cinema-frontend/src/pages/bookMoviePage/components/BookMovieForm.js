@@ -53,7 +53,11 @@ const BookMovieForm = ( { classes, selectedMovie }) => {
             onChange={handleScreeningTimeChange}
           >
             {selectedMovie.screeningTimes.map(screeningTime =>
-              <MenuItem key={screeningTime.id} value={screeningTime.id}>{moment(screeningTime.datetime_start).format('MMMM Do YYYY, HH:mm')}</MenuItem>
+            {
+              if (screeningTime.cinema_id == selectedCinema) return (
+                <MenuItem key={screeningTime.id} value={screeningTime.id}>{moment(screeningTime.datetime_start).format('MMMM Do YYYY, HH:mm')}</MenuItem>
+              )
+            } 
             )}
           </Select>
         </FormControl>
