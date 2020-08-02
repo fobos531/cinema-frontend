@@ -19,7 +19,8 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
     display: 'flex',
     overflow: 'auto',
-    flexDirection: 'column',
+    flexDirection: 'row',
+    justifyContent: 'center'
   },
   fixedHeight: {
     height: 240,
@@ -29,43 +30,15 @@ const useStyles = makeStyles((theme) => ({
 const MainView = () => {
   const dispatch = useDispatch()
   const classes = useStyles();
-  const [totalUsers, setTotalUsers] = useState();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      let count = (await userService.totalUsers()).total;
-      setTotalUsers(count);
-      dispatch(getCinemas()) // get all cinemas
-      dispatch(getMovies())
-      dispatch(getReservations())
-    }
-    fetchData()
-  }, [])
-  const cinemas = useSelector(state => state.cinemaState.cinemas)
-  const movies = useSelector(state => state.movieState.movies)
-  const reservations = useSelector(state => state.reservationsState.reservations)
-
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   return (
     <Grid container spacing={3}>
 
-      <Grid item xs={12} md={8} lg={9}>
-        <Paper className={fixedHeightPaper}>
-          <Title>Total cinemas: {cinemas.length}</Title>
-          <Title>Total movies: {movies.length}</Title>
-          <Title>Total reservations: {reservations.length}</Title>
-        </Paper>
-      </Grid>
-
-      <Grid item xs={12} md={4} lg={3}>
-        <Paper className={fixedHeightPaper}>
-          <TotalUsers count={totalUsers} />
-        </Paper>
-      </Grid>
-
       <Grid item xs={12}>
         <Paper className={classes.paper}>
-
+          <Typography variant="h2" component="h2">
+            Welcome back, {JSON.parse(localStorage.getItem('loggedUser')).name}!
+          </Typography>
         </Paper>
       </Grid>
     </Grid>

@@ -12,6 +12,9 @@ const cinemaReducer = (state = initialState, action) => {
       // od actiona bum dobil cinemas i tu bum ih onda v state postavil
       state = { ...state, cinemas: action.payload }
       return state
+    case 'ADD_NEW_CINEMA':
+      state = { ...state, cinemas: [...state.cinemas.concat(action.payload)] }
+      return state
     default:
       return state
   }

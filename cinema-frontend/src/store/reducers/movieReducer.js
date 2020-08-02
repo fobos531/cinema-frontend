@@ -13,6 +13,9 @@ const movieReducer = (state = initialState, action) => {
     case 'GET_MOVIE_BY_ID':
       state = { ...state, selectedMovie: action.payload}
       return state
+    case 'ADD_NEW_MOVIE':
+      state = { ...state, movies: [...state.movies.concat(action.payload)] }
+      return state
     default:
       return state
   }

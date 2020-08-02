@@ -9,8 +9,8 @@ export const getMovies = () => {
 
 export const addNewMovie = (movieData) => {
   return async dispatch => {
-    await movieService.addMovie(movieData);
-    dispatch(getMovies())
+    const response = await movieService.addMovie(movieData);
+    dispatch({ type: 'ADD_NEW_MOVIE', payload: response})
   }
 }
 

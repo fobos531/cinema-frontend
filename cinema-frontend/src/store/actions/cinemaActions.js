@@ -8,16 +8,16 @@ export const getCinemas = () => {
 }
 
 // ovo se trenutni nigdje ne koristi
-export const getAvailableCinemas = () => {
+/* export const getAvailableCinemas = () => {
   return async dispatch => {
     const response = await cinemaService.getAvailableCinemas()
   }
-}
+} */
 
 export const addNewCinema = (cinemaData) => {
   return async dispatch => {
-    await cinemaService.addCinema(cinemaData);
-    dispatch(getCinemas())
+    const response = await cinemaService.addCinema(cinemaData);
+    dispatch({type: 'ADD_NEW_CINEMA', payload: response})
   }
 }
 

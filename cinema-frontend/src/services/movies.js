@@ -6,10 +6,11 @@ const addMovie = async (newMovie) => {
   let config = {
     headers: {
       'Content-Type': 'multipart/form-data',
+      'Authorization': `Bearer ${localStorage.getItem('userToken')}`,
     }
   }
-  await axios.post(baseUrl, newMovie, config)
-  // return response.data; not needed for now
+  const response = await axios.post(baseUrl, newMovie, config)
+  return response.data;
 }
 
 const allMovies = async () => {
@@ -17,9 +18,23 @@ const allMovies = async () => {
   return response.data; // array objekata od kojih svaki predstavlja jedno kino
 }
 
+const moviesRated = async () => {
+  let config = {
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('userToken')}`,
+    }
+  }
+  const response = await axios.get(`${baseUrl}/moviesRated`, config)
+  return response.data; 
+}
 
 const deleteMovie = async (id) => {
-  const response = await axios.delete(`${baseUrl}/${id}`)
+  let config = {
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('userToken')}`,
+    }
+  }
+  const response = await axios.delete(`${baseUrl}/${id}`, config)
   return response.data; // array objekata od kojih svaki predstavlja jedno kino
 }
 
@@ -29,4 +44,4 @@ const getMovieById = async (id) => {
   return response.data
 }
 
-export default { addMovie, allMovies, deleteMovie, getMovieById }
+export default { addMovie, allMovies, deleteMovie, getMovieById, moviesRated }

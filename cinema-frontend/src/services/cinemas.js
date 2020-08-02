@@ -9,8 +9,8 @@ const addCinema = async (newCinema) => {
       'Authorization': `Bearer ${localStorage.getItem('userToken')}`
     }
   }
-  await axios.post(baseUrl, newCinema, config)
-  // return response.data; not needed for now
+  const response = await axios.post(baseUrl, newCinema, config)
+  return response.data;
 }
 
 const allCinemas = async () => {

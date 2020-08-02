@@ -55,7 +55,7 @@ const ReservationsView = () => {
   let reservations = useSelector(state => state.reservationsState.reservations)
   useEffect(() => {
      dispatch(getReservations())
-  }, [reservations]) // load cinemas 
+  }, []) // load cinemas 
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} md={12} lg={12}>

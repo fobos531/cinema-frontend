@@ -72,7 +72,6 @@ const CinemaForm = () => {
     document.getElementById("ticketPrice").value = ''
     document.getElementById("city").value = ''
     document.getElementById("postalCode").value = ''
-
   }
   return (
     <>
@@ -148,14 +147,14 @@ const CinemaForm = () => {
 // fetchaj sve cinema-e
 
 
-const CinemasView = ({ cinemas }) => {
+const CinemasView = () => {
   const dispatch = useDispatch()
   const classes = useStyles();
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   let cinemaState = useSelector(state => state.cinemaState)
   useEffect(() => {
     dispatch(getCinemas())
-  }, [cinemaState]) // load cinemas 
+  }, []) // load cinemas 
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} md={12} lg={12}>

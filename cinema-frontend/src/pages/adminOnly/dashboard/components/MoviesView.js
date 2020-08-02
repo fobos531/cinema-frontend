@@ -109,7 +109,7 @@ const MoviesView = () => {
   let movieState = useSelector(state => state.movieState)
   useEffect(() => {
     dispatch(getMovies())
-  }, [movieState]) // load movies once
+  }, []) // load movies once
 
   return (
     <Grid container spacing={2}>
