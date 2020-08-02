@@ -39,14 +39,6 @@ const App = () => {
   return (
     <div>
     <Router>
-     {/*  <div>
-        <Link to="/">home</Link>
-        <Link to="/login">login</Link>
-        <Link to="/register">register</Link>
-        <Link to="/admin/dashboard">admin dashboard</Link>
-        <Link to="/user/dashboard">user dashboard</Link>
-        <Link to="/homepage">home page</Link>
-      </div> */}
       <Navbar />
 
       <Switch>

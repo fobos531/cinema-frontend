@@ -59,12 +59,16 @@ const Navbar = () => {
             <RouterLink component={Link} variant="button" color="textPrimary" to="/movies" className={classes.link}>
               Movies
             </RouterLink>
-            <RouterLink component={Link} variant="button" color="textPrimary" to="/user/reservations" className={classes.link}>
-              My reservations
-            </RouterLink>
-            <RouterLink component={Link} variant="button" color="textPrimary" to="/user/dashboard" className={classes.link}>
-              Settings
-            </RouterLink>
+            {userState != null &&
+              <RouterLink component={Link} variant="button" color="textPrimary" to="/user/reservations" className={classes.link}>
+                My reservations
+              </RouterLink>
+            }
+            {userState != null &&
+              <RouterLink component={Link} variant="button" color="textPrimary" to="/user/dashboard" className={classes.link}>
+                Settings
+              </RouterLink>
+            }
             {userState != null && userState.user_type == "administrator" &&
               <RouterLink component={Link} variant="button" color="textPrimary" to="/admin/dashboard" className={classes.link}>
                 Admin dashboard
