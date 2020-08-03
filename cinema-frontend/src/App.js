@@ -25,7 +25,7 @@ import MyReservationsPage from './pages/MyReservationsPage/index'
 import { Widget, addResponseMessage } from 'react-chat-widget';
 import 'react-chat-widget/lib/styles.css';
 import socketIOClient from "socket.io-client";
-const ENDPOINT = "http://localhost:3001";
+const ENDPOINT = "http://31.220.43.156:80";
 let socket = socketIOClient(ENDPOINT)
 
 const App = () => {
