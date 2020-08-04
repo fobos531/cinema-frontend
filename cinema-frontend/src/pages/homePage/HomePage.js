@@ -36,7 +36,7 @@ const HomePage = () => {
     <div className={classes.container}>
     <iframe
     title="youtube background"
-    src="http://www.youtube-nocookie.com/embed/bkATwnWpWK4?autoplay=1&controls=0&showinfo=0&mute=1&loop=1"
+    src="http://www.youtube-nocookie.com/embed/bkATwnWpWK4?autoplay=1&controls=0&showinfo=0&mute=1&loop=1&playlist=bkATwnWpWK4"
     className={classes.wholePage}
     frameborder="0" height="100%" width="100%"
     >
